@@ -7,10 +7,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const DATA_FILE = process.env.DATA_PATH || path.join(process.cwd(), 'data.json');
+let DATA_FILE = process.env.DATA_PATH || path.join(process.cwd(), 'data.json');
 
-if (!fs.existsSync(DATA_FILE)) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+try {
+  if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+  }
+} catch (err) {
+  console.log("Could not write to custom DATA_PATH, falling back to local directory.");
+  DATA_FILE = path.join(process.cwd(), 'data.json');
+  if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+  }
 }
 
 app.get('/api/transactions', (req, res) => {
