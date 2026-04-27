@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const DATA_FILE = path.join(process.cwd(), 'data.json');
+const DATA_FILE = process.env.DATA_PATH || path.join(process.cwd(), 'data.json');
 
 if (!fs.existsSync(DATA_FILE)) {
   fs.writeFileSync(DATA_FILE, JSON.stringify([]));
